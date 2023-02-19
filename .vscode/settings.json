@@ -1,0 +1,20 @@
+{
+  "html.format.wrapAttributes": "preserve",
+  "html.format.enable": false,
+  "javascript.validate.enable": false,
+  "javascript.format.enable": false,
+  "typescript.validate.enable": false,
+  "typescript.format.enable": false,
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.tslint": true,
+    "source.fixAll.stylelint": true
+  },
+  "search.exclude": {
+    "node_modules": true,
+    "dist": true,
+    ".git": true
+  }
+}

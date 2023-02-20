@@ -25,7 +25,10 @@
         "-r", "ts-node/register",
         "-r", "tsconfig-paths/register"
       ],
-      "args": ["${workspaceFolder}/src/__tests__/index.ts"]
+      "args": ["${workspaceFolder}/src/__tests__/main.ts"],
+      "env": {
+        "NODE_ENV": "development"
+      }
     }
   ]
 }

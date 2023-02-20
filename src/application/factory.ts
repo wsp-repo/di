@@ -1,28 +1,68 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   InjectableClass,
   OnCreatedApplication,
   OnReadyApplication,
 } from '../interfaces';
 
-export class Injector {
-  private diInstances = new Map<InjectableClass, any>();
+export class AppFactory {
+  private static instance: AppFactory;
+
+  private diApplication!: InjectableClass;
+
+  private diInstances = new Map<InjectableClass, unknown>();
 
   private diLevels = new Map<InjectableClass, number>();
 
   /**
-   * Инициирует инстанс приложения и все injected-зависимости
+   * Создает и инициирует приложение
    */
-  public async getInstance<T>(constructor: InjectableClass<T>): Promise<T> {
-    const instance = this.constructObject<T>(constructor);
+  public static async create<T>(
+    applicationClass: InjectableClass<T>,
+  ): Promise<T> {
+    if (this.instance) throw new Error('AppInstance created');
+
+    this.instance = new this();
+
+    await this.instance.createApplication<T>(applicationClass);
+
+    return this.getApplication<T>();
+  }
+
+  /**
+   * Возвращает инстанс корневого класса приложения
+   */
+  public static getApplication<T>(): T {
+    if (!this.instance) throw new Error('Application not created');
+
+    return this.instance.diInstances.get(this.instance.diApplication) as T;
+  }
+
+  /**
+   * Возвращает инстанс injected-зависимости по ее классу
+   */
+  public static getInstance<T>(instanceClass: InjectableClass): T {
+    if (!this.instance) throw new Error('Application not created');
+
+    return this.instance.diInstances.get(instanceClass) as T;
+  }
+
+  /**
+   * Создает инстансы класса приложения и его injected-зависимостей
+   */
+  private async createApplication<T>(
+    appRootClass: InjectableClass<T>,
+  ): Promise<void> {
+    this.logConsole(`Create application`);
+
+    this.constructObject<T>(appRootClass);
+    this.diApplication = appRootClass;
 
     await this.afterCreatedInstances();
 
-    return instance;
+    this.logConsole(`Ready application`);
   }
 
   /**
@@ -42,6 +82,7 @@ export class Injector {
     const orderLevels = [...levels.keys()].sort((l1, l2) => l2 - l1);
 
     // запускаем сначала обработчики создания приложения
+    this.logConsole(`Launch instances onCreatedApplication`);
     for (const level of orderLevels) {
       const handlersCreatedApplications = (levels.get(level) || [])
         .filter((instance) => this.checkOnCreatedApplication(instance))
@@ -53,6 +94,7 @@ export class Injector {
     }
 
     // потом запускаем обработчики готовности приложения
+    this.logConsole(`Launch instances onReadyApplication`);
     for (const level of orderLevels) {
       const handlersReadyApplications = (levels.get(level) || [])
         .filter((instance) => this.checkOnReadyApplication(instance))
@@ -88,19 +130,21 @@ export class Injector {
   private constructObject<T>(constructor: InjectableClass, level = 0): T {
     this.setLevelInjectableClass(constructor, level);
 
-    const args = this.getMetadata(constructor).map((params) =>
-      this.constructObject(params, level + 1),
+    const args = this.getMetadata(constructor).map((inject) =>
+      this.constructObject<typeof inject>(inject, level + 1),
     );
 
     // Порядок такой, чтобы считать уровень вложенности
     const existsInstance = this.diInstances.get(constructor);
 
-    if (existsInstance) return existsInstance;
+    if (existsInstance) return existsInstance as T;
 
     const createdInstance = new constructor(...args);
     this.diInstances.set(constructor, createdInstance);
 
-    return createdInstance;
+    this.logConsole(`Created instance ${constructor.name}`);
+
+    return createdInstance as T;
   }
 
   /**
@@ -121,5 +165,11 @@ export class Injector {
     const setLevel = Math.max(level, currentLevel || 0);
 
     this.diLevels.set(constructor, setLevel);
+  }
+
+  private logConsole(...args: unknown[]): void {
+    if (process.env.NODE_ENV === 'development') {
+      console.info(...args);
+    }
   }
 }

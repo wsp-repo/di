@@ -4,6 +4,11 @@
   "description": "WSPro DI",
   "author": "https://github.com/wsp-repo/",
   "license": "ISC",
+  "keywords": [
+    "di",
+    "injectable",
+    "inject"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
@@ -14,14 +19,15 @@
     "dist/**/*"
   ],
   "scripts": {
-    "build": "tsc",
-    "test": "jest --passWithNoTests",
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "clean": "rimraf dist",
     "format": "prettier --write 'src/**/*.ts'",
     "lint": "eslint 'src/**/*.{ts,js}' --quiet",
     "lint:fix": "eslint 'src/**/*.{js,ts}' --quiet --fix",
     "lint:warns": "eslint 'src/**/*.ts' --max-warnings 0",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run lint && npm run test && npm run build"
+    "prepublishOnly": "npm run lint",
+    "test": "jest"
   },
   "dependencies": {
     "@wspro/core": "1.0.2",

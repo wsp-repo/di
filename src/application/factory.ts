@@ -55,10 +55,14 @@ export class AppFactory {
   private async createApplication<T>(
     appRootClass: InjectableClass<T>,
   ): Promise<void> {
+    this.logConsole(`Create application`);
+
     this.constructObject<T>(appRootClass);
     this.diApplication = appRootClass;
 
     await this.afterCreatedInstances();
+
+    this.logConsole(`Ready application`);
   }
 
   /**
@@ -78,6 +82,7 @@ export class AppFactory {
     const orderLevels = [...levels.keys()].sort((l1, l2) => l2 - l1);
 
     // запускаем сначала обработчики создания приложения
+    this.logConsole(`Launch instances onCreatedApplication`);
     for (const level of orderLevels) {
       const handlersCreatedApplications = (levels.get(level) || [])
         .filter((instance) => this.checkOnCreatedApplication(instance))
@@ -89,6 +94,7 @@ export class AppFactory {
     }
 
     // потом запускаем обработчики готовности приложения
+    this.logConsole(`Launch instances onReadyApplication`);
     for (const level of orderLevels) {
       const handlersReadyApplications = (levels.get(level) || [])
         .filter((instance) => this.checkOnReadyApplication(instance))
@@ -136,6 +142,8 @@ export class AppFactory {
     const createdInstance = new constructor(...args);
     this.diInstances.set(constructor, createdInstance);
 
+    this.logConsole(`Created instance ${constructor.name}`);
+
     return createdInstance as T;
   }
 
@@ -157,5 +165,11 @@ export class AppFactory {
     const setLevel = Math.max(level, currentLevel || 0);
 
     this.diLevels.set(constructor, setLevel);
+  }
+
+  private logConsole(...args: unknown[]): void {
+    if (process.env.NODE_ENV === 'development') {
+      console.info(...args);
+    }
   }
 }

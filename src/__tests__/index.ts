@@ -1,4 +1,12 @@
-import { Injectable, Injector } from '../index';
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import {
+  Application,
+  Injectable,
+  AppFactory,
+  OnReadyApplication,
+} from '../index';
 
 import { Level11 } from './level1';
 import { Level31, Level32 } from './level3';
@@ -14,13 +22,17 @@ export class Level41 {
   }
 }
 
-@Injectable()
-export class Main {
+@Application()
+export class Main implements OnReadyApplication {
   constructor(
     protected readonly level41: Level41,
     protected readonly level31: Level31,
     protected readonly level32: Level32,
   ) {}
+
+  public onReadyApplication(): void {
+    console.warn('APPLICATION FULL READY');
+  }
 
   init(): void {
     this.level31.init();
@@ -34,9 +46,9 @@ export class Main {
 console.warn('MAIN');
 
 async function bootstrap(): Promise<void> {
-  const injector = new Injector();
-  const main = await injector.getInstance<Main>(Main);
-  main.init();
+  const app = await AppFactory.create<Main>(Main);
+
+  app.init();
 }
 
 bootstrap().catch((error) => console.error(error));

@@ -53,17 +53,46 @@ export class Service3 implements OnReadyApplication {
 ```
 
 ```typescript
+// файл service4.ts
+
+import { Inject, Injectable, OnReadyApplication } from '@wspro/di';
+import { Service1 } from './service1';
+import { Service2 } from './service2';
+
+@Injectable()
+export class Service4 {
+  @Inject(Service1)
+  protected service1: Service1;
+
+  constructor(private service2: Service2) {}
+}
+
+@Injectable()
+export class Service5 {
+  constructor(private service2: Service2) {
+    super(service2);
+    ...
+  }
+
+  // в классе проинициализирован this.service1 через свойство родителя
+  // без необходимости его проброса в конструкторе через super(...)
+}
+```
+
+```typescript
 // файл application.ts
 
 import { Application } from '@wspro/di';
 import { Service2 } from './service2';
 import { Service3 } from './service3';
+import { Service5 } from './service4';
 
 @Application()
 export class AppService {
   constructor(
     private service2: Service2,
     private service3: Service3,
+    private service5: Service5,
   ) {}
 
   // Рабочие методы класса приложения

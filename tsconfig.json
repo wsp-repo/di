@@ -26,7 +26,8 @@
     "strict": true,
     "target": "ES2022",
     "typeRoots": ["./node_modules/@types"],
-    "useUnknownInCatchVariables": false,
+    "useDefineForClassFields": false,
+    "useUnknownInCatchVariables": false
   },
   "include": ["./src"],
   "exclude": ["./node_modules", "./dist"]

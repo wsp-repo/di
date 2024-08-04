@@ -46,6 +46,10 @@ export class AppFactory {
   public static getInstance<T>(instanceClass: InjectableClass): T {
     if (!this.instance) throw new Error('Application not created');
 
+    if (!this.instance.diInstances.has(instanceClass)) {
+      this.instance.constructObject(instanceClass);
+    }
+
     return this.instance.diInstances.get(instanceClass) as T;
   }
 

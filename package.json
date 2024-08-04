@@ -1,7 +1,7 @@
 {
   "name": "@wspro/di",
-  "version": "1.0.2",
-  "description": "Symple DI",
+  "version": "1.0.3",
+  "description": "Simple DI",
   "author": "https://github.com/wsp-repo/",
   "license": "ISC",
   "keywords": [

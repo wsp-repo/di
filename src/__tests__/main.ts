@@ -1,5 +1,4 @@
 import { AppFactory } from '../index';
-
 import { AppService } from './application';
 import { extFunction } from './helpers/functions';
 

@@ -1,5 +1,4 @@
 import { Injectable, OnReadyApplication } from '../../index';
-
 import { Service1 } from './service1';
 
 @Injectable()

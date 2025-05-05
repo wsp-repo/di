@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {
   InjectableClass,
   OnCreatedApplication,
@@ -59,14 +58,14 @@ export class AppFactory {
   private async createApplication<T>(
     appRootClass: InjectableClass<T>,
   ): Promise<void> {
-    this.logConsole(`Create application`);
+    this.logConsole('Create application');
 
     this.constructObject<T>(appRootClass);
     this.diApplication = appRootClass;
 
     await this.afterCreatedInstances();
 
-    this.logConsole(`Ready application`);
+    this.logConsole('Ready application');
   }
 
   /**
@@ -86,7 +85,7 @@ export class AppFactory {
     const orderLevels = [...levels.keys()].sort((l1, l2) => l2 - l1);
 
     // запускаем сначала обработчики создания приложения
-    this.logConsole(`Launch instances onCreatedApplication`);
+    this.logConsole('Launch instances onCreatedApplication');
     for (const level of orderLevels) {
       const handlersCreatedApplications = (levels.get(level) || [])
         .filter((instance) => this.checkOnCreatedApplication(instance))
@@ -98,7 +97,7 @@ export class AppFactory {
     }
 
     // потом запускаем обработчики готовности приложения
-    this.logConsole(`Launch instances onReadyApplication`);
+    this.logConsole('Launch instances onReadyApplication');
     for (const level of orderLevels) {
       const handlersReadyApplications = (levels.get(level) || [])
         .filter((instance) => this.checkOnReadyApplication(instance))

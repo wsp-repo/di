@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import { AppFactory } from '../application/factory';
 import { throwSetter } from '../helpers';
 

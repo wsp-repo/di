@@ -1,5 +1,5 @@
-const jsEslintConfig = require('@wspro/linter/eslint/js');
-const tsEslintConfig = require('@wspro/linter/eslint/ts');
+const jsEslintConfig = require('@zalib/linter/eslint/node-js');
+const tsEslintConfig = require('@zalib/linter/eslint/node-ts');
 
 module.exports = {
   overrides: [
@@ -14,9 +14,6 @@ module.exports = {
       parserOptions: {
         include: ['./src/**/*.ts'],
         project: './tsconfig.json',
-      },
-      rules: {
-        '@typescript-eslint/no-explicit-any': 0,
       },
     },
   ],

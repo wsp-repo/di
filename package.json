@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
-    "@zalib/linter": "^2.0.8",
+    "@zalib/linter": "^2.0.9",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
     "jest-html-reporter": "^4.3.0",

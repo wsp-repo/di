@@ -15,10 +15,13 @@ module.exports = {
         outputName: 'unit.xml',
       },
     ],
-    ['jest-html-reporter', {
-      pageTitle: 'Test Report',
-      outputPath: './reports/unit.html'
-    }]
+    [
+      'jest-html-reporter',
+      {
+        outputPath: './reports/unit.html',
+        pageTitle: 'Test Report',
+      },
+    ],
   ],
   rootDir: './src/',
   testEnvironment: 'node',

@@ -1,6 +1,6 @@
 {
   "name": "@zalib/di",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Zalib DI",
   "author": "https://github.com/wsp-repo/",
   "license": "UNLICENSED",
@@ -60,7 +60,7 @@
     "test-exclude": "^7.0.0",
     "glob": "^13.0.1",
     "inflight": "^1.0.6"
-  },  
+  },
   "lint-staged": {
     "package.json": "check-exact-package",
     "*.{js,ts}": [

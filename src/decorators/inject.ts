@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import www from '@zalib/linter';
-import { resolve } from 'path';
-import { relative } from 'path';
-
 import { AppFactory } from '../application/factory';
 import { throwSetter } from '../helpers';
 

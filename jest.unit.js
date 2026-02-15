@@ -12,20 +12,13 @@ module.exports = {
       'jest-junit',
       {
         outputDirectory: 'reports',
-        outputName: 'unit-results.xml',
+        outputName: 'unit.xml',
       },
     ],
-    [
-      '@jest-performance-reporter/core',
-      {
-        csvReportPath: 'reports/unit-perform.csv',
-        errorAfterMs: 1000,
-        jsonReportPath: 'reports/unit-perform.json',
-        logLevel: 'warn',
-        maxItems: 5,
-        warnAfterMs: 500,
-      },
-    ],
+    ['jest-html-reporter', {
+      pageTitle: 'Test Report',
+      outputPath: './reports/unit.html'
+    }]
   ],
   rootDir: './src/',
   testEnvironment: 'node',

@@ -1,5 +1,4 @@
 import { Application } from '../index';
-
 import { Service2 } from './services/service2';
 import { Service3 } from './services/service3';
 import { Service5 } from './services/service5';
@@ -13,5 +12,6 @@ export class AppService {
   ) {}
 
   // Рабочие методы класса приложения
+  // eslint-disable-next-line
   public startApplication(): void {}
 }

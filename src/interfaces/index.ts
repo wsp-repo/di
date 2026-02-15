@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export interface InjectableClass<T = unknown> {
   new (...args: any[]): T;
 }

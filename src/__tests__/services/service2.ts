@@ -1,5 +1,4 @@
 import { Injectable, OnCreatedApplication } from '../../index';
-
 import { Service1 } from './service1';
 
 @Injectable()
@@ -11,5 +10,6 @@ export class Service2 implements OnCreatedApplication {
     // метод вызывается после создания всех инстансов
   }
 
+  // eslint-disable-next-line
   public publicMethod(): void {}
 }

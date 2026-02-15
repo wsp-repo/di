@@ -7,7 +7,7 @@
 ```typescript
 // файл service1.ts
 
-import { Injectable } from '@wspro/di';
+import { Injectable } from '@zalib/di';
 
 @Injectable()
 export class Service1 {}
@@ -17,7 +17,7 @@ export class Service1 {}
 ```typescript
 // файл service2.ts
 
-import { Injectable, OnCreatedApplication } from '@wspro/di';
+import { Injectable, OnCreatedApplication } from '@zalib/di';
 import { Service1 } from './service1';
 
 @Injectable()
@@ -37,7 +37,7 @@ export class Service2 implements OnCreatedApplication {
 ```typescript
 // файл service3.ts
 
-import { Injectable, OnReadyApplication } from '@wspro/di';
+import { Injectable, OnReadyApplication } from '@zalib/di';
 import { Service1 } from './service1';
 
 @Injectable()
@@ -55,7 +55,7 @@ export class Service3 implements OnReadyApplication {
 ```typescript
 // файл service4.ts
 
-import { Inject, Injectable, OnReadyApplication } from '@wspro/di';
+import { Inject, Injectable, OnReadyApplication } from '@zalib/di';
 import { Service1 } from './service1';
 import { Service2 } from './service2';
 
@@ -82,7 +82,7 @@ export class Service5 {
 ```typescript
 // файл application.ts
 
-import { Application } from '@wspro/di';
+import { Application } from '@zalib/di';
 import { Service2 } from './service2';
 import { Service3 } from './service3';
 import { Service5 } from './service4';
@@ -105,7 +105,7 @@ export class AppService {
 ```typescript
 // файл main.ts
 
-import { AppFactory } from '@wspro/di';
+import { AppFactory } from '@zalib/di';
 import { AppService } from './application';
 
 async function bootstrap(): Promise<void> {
@@ -126,7 +126,7 @@ bootstrap().catch((error) => console.error(error));
 ```typescript
 // файл functions.ts
 
-import { AppFactory } from '@wspro/di';
+import { AppFactory } from '@zalib/di';
 import { Service2 } from './service2';
 
 function extFunction(): void {

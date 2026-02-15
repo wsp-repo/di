@@ -4,6 +4,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "allowUnreachableCode": false,
+    "baseUrl": ".",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
@@ -11,10 +12,10 @@
     "incremental": true,
     "inlineSourceMap": false,
     "inlineSources": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
     "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noLib": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -22,13 +23,22 @@
     "pretty": true,
     "removeComments": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "target": "ES2022",
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
     "useDefineForClassFields": false,
     "useUnknownInCatchVariables": false
   },
-  "include": ["./src"],
-  "exclude": ["./node_modules", "./dist"]
+  "include": [
+    "./src",
+  ],
+  "exclude": [
+    "./node_modules",
+    "./dist",
+    "./reports"
+  ]
 }

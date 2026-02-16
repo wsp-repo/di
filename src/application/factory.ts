@@ -7,7 +7,13 @@ import {
 } from '../interfaces';
 
 export class AppFactory {
-  private static instance: AppFactory;
+  private static instanceObject: AppFactory;
+
+  private static instanceResolve: (application: AppFactory) => void;
+
+  private static instancePromise = new Promise<AppFactory>((resolve) => {
+    this.instanceResolve = resolve;
+  });
 
   private diApplication!: InjectableClass;
 
@@ -21,35 +27,67 @@ export class AppFactory {
   public static async create<T>(
     applicationClass: InjectableClass<T>,
   ): Promise<T> {
-    if (this.instance) throw new Error('AppInstance created');
+    if (this.instanceObject) throw new Error('AppInstance created');
 
-    this.instance = new this();
+    this.instanceObject = new this();
 
-    await this.instance.createApplication<T>(applicationClass);
+    await this.instanceObject.createApplication<T>(applicationClass);
 
-    return this.getApplication<T>();
+    // необходимо зарезолвить создание инстанса в следующем тике
+    setImmediate(() => this.instanceResolve(this.instanceObject));
+
+    return this.getApplicationSync<T>();
+  }
+
+  /**
+   * Возвращает инстанс корневого класса приложения (промис)
+   */
+  public static getApplication<T>(): Promise<T> {
+    return this.instancePromise.then(() => {
+      return this.getApplicationSync<T>();
+    });
   }
 
   /**
    * Возвращает инстанс корневого класса приложения
    */
-  public static getApplication<T>(): T {
-    if (!this.instance) throw new Error('Application not created');
+  public static getApplicationSync<T>(): T {
+    this.throwIfNotExistsApplicationInstanceObject();
 
-    return this.instance.diInstances.get(this.instance.diApplication) as T;
+    return this.instanceObject.diInstances.get(
+      this.instanceObject.diApplication,
+    ) as T;
+  }
+
+  /**
+   * Возвращает инстанс injected-зависимости по ее классу (асинк)
+   */
+  public static getInstance<T>(instanceClass: InjectableClass): Promise<T> {
+    return this.instancePromise.then(() => {
+      return this.getInstanceSync<T>(instanceClass);
+    });
   }
 
   /**
    * Возвращает инстанс injected-зависимости по ее классу
    */
-  public static getInstance<T>(instanceClass: InjectableClass): T {
-    if (!this.instance) throw new Error('Application not created');
+  public static getInstanceSync<T>(instanceClass: InjectableClass): T {
+    this.throwIfNotExistsApplicationInstanceObject();
 
-    if (!this.instance.diInstances.has(instanceClass)) {
-      this.instance.constructObject(instanceClass);
+    if (!this.instanceObject.diInstances.has(instanceClass)) {
+      this.instanceObject.constructObject(instanceClass);
     }
 
-    return this.instance.diInstances.get(instanceClass) as T;
+    return this.instanceObject.diInstances.get(instanceClass) as T;
+  }
+
+  /**
+   * Выкидывает исключение, если инстанс приложения отсутсвует
+   */
+  private static throwIfNotExistsApplicationInstanceObject(): void {
+    if (!this.instanceObject) {
+      throw new Error('Application not created');
+    }
   }
 
   /**
@@ -87,24 +125,24 @@ export class AppFactory {
     // запускаем сначала обработчики создания приложения
     this.logConsole('Launch instances onCreatedApplication');
     for (const level of orderLevels) {
-      const handlersCreatedApplications = (levels.get(level) || [])
+      const handlersCreated = (levels.get(level) || [])
         .filter((instance) => this.checkOnCreatedApplication(instance))
         .map((instance) => instance.onCreatedApplication());
 
-      if (handlersCreatedApplications.length > 0) {
-        await Promise.all(handlersCreatedApplications);
+      if (handlersCreated.length > 0) {
+        await Promise.all(handlersCreated as Promise<void>[]);
       }
     }
 
     // потом запускаем обработчики готовности приложения
     this.logConsole('Launch instances onReadyApplication');
     for (const level of orderLevels) {
-      const handlersReadyApplications = (levels.get(level) || [])
+      const handlersReady = (levels.get(level) || [])
         .filter((instance) => this.checkOnReadyApplication(instance))
         .map((instance) => instance.onReadyApplication());
 
-      if (handlersReadyApplications.length > 0) {
-        await Promise.all(handlersReadyApplications);
+      if (handlersReady.length > 0) {
+        await Promise.all(handlersReady as Promise<void>[]);
       }
     }
   }

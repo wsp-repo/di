@@ -11,7 +11,7 @@ import { InjectableClass } from '../interfaces';
 export function Inject<T extends InjectableClass>(injectClass: T) {
   return (target: object, propertyKey: string): void => {
     const attr = {
-      get: () => AppFactory.getInstance<T>(injectClass),
+      get: () => AppFactory.getInstanceSync<T>(injectClass),
       set: throwSetter,
     };
 

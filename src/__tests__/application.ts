@@ -13,5 +13,5 @@ export class AppService {
 
   // Рабочие методы класса приложения
   // eslint-disable-next-line
-  public startApplication(): void {}
+  public startApplicationMethod(): void {}
 }

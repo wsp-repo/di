@@ -1,6 +1,4 @@
-
 # Минималистический DI
-
 
 ## Пример использования
 
@@ -12,7 +10,6 @@ import { Injectable } from '@zalib/di';
 @Injectable()
 export class Service1 {}
 ```
-
 
 ```typescript
 // файл service2.ts
@@ -110,7 +107,7 @@ import { AppService } from './application';
 
 async function bootstrap(): Promise<void> {
   await AppFactory.create<AppService>(AppService);
-  const app = AppFactory.getApplication<AppService>();
+  const app = AppFactory.getApplicationSync<AppService>();
 
   // Альтернативный вариант
   // const app = await AppFactory.create<AppService>(AppService);
@@ -119,9 +116,7 @@ async function bootstrap(): Promise<void> {
 }
 
 bootstrap().catch((error) => console.error(error));
-
 ```
-
 
 ```typescript
 // файл functions.ts
